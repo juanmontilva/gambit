@@ -10,7 +10,7 @@ import (
 	"github.com/juanmontilva/gambit/awsgo"
 
 	"github.com/juanmontilva/gambit/bd"
-	//"github.com/juanmontilva/gambit/handlers"
+	"github.com/juanmontilva/gambit/handlers"
 
 	lambda "github.com/aws/aws-lambda-go/lambda"
 )
@@ -33,7 +33,6 @@ func EjecutoLambda(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 	//OJO SE PUEDE AGREGAR EN EL path el prefix directamente, se podria optimizar memoria pero no lo hago para entender mejor
 	prefix := os.Getenv("UrlPrefix")
 
-
 	path := strings.Replace(request.RawPath, prefix, "", -1)
 
 	method := request.RequestContext.HTTP.Method
@@ -45,6 +44,8 @@ func EjecutoLambda(ctx context.Context, request events.APIGatewayV2HTTPRequest) 
 	//CON ESTA PARTE LA API SE MANEJARA SI O SI DE UNA MANERA MUY OPTIMA res, prefix, path, method, body, header, ojo leer documentacion de lambda porque posiblemente no funcione gorilla mux
 
 	bd.ReadSecret()
+
+	status, message := handlers.Manejadores(path, method, body, header, request)
 
 	headesResp := map[string]string{
 		"Content-Type": "application/json",

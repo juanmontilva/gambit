@@ -29,3 +29,9 @@ type Signup struct {
 	UserEmail string `json:"UserEmail"`
 	UserUUID  string `json:"UserUUID"`
 }
+
+type Category struct {
+	CategId   int    `json:"categID"`
+	CategName string `json:"categName"`
+	CategPath string `json:"categPath"`
+}

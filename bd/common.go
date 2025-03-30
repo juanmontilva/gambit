@@ -76,3 +76,43 @@ func ConnStr(claves models.SecretRDSJson) string {
 	fmt.Println(dsn)
 	return dsn
 }
+
+//esta funcion me permite saber si el usuario es admin para realizar los cambios, esto por motivos de segurdad
+
+func UserIsAdmin(userUUID string) (bool, string) {
+	fmt.Println("COMIENSA USER IS ADMIN")
+
+	err := DbConnect()
+	if err != nil {
+		return false, err.Error()
+	}
+
+	defer Db.Close()
+
+	sentencia := "SELECT 1 FROM users WHERE User_UUID='" + userUUID + "' AND User_Status = 0"
+
+	//esto me permite ver en el cloudwatch si esta todo bien, cualquier duda se puede modificar para encontrar el error para validar
+	fmt.Println(sentencia)
+
+	//devuelve un error de sintaxis para ver y el row recorre la filas para procesar el resultado
+	rows, err := Db.Query(sentencia)
+	if err != nil {
+		return false, err.Error()
+	}
+
+	var valor string
+
+	rows.Next()
+	rows.Scan(&valor)
+
+	//esto es muy positivo para ver el resultado en el cloudwatch
+	fmt.Println("UserIsAdmin > Ejecucion exitosa - valor devuelto " + valor)
+
+	//esto me permite validar que es admin, caso contrario retorna false con USER IS NOT ADMIN
+	if valor == "1" {
+		return true, ""
+	}
+
+	return false, "USER IS NOT ADMIN"
+
+}

@@ -2,6 +2,7 @@ package tools
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -25,3 +26,11 @@ func FechaMysql() string {
 }
 
 // esto es muy importante para el motor de mysql en golang para que se formatee, muy importante
+
+
+//esto me permite tener una base de datos mas limpia para no cargar comillas simples, es muy util, elimina de cualquier string "  y tambien '
+func EscapeString(t string) string{
+	desc := strings.ReplaceAll(t, "'", "")
+	desc = strings.ReplaceAll(desc, "\"", "")
+	return desc
+}

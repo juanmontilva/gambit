@@ -96,6 +96,8 @@ func ProcesoCategory(body string, path string, method string, user string, id in
 	switch method {
 	case "POST":
 		return routes.InsertCategory(body, user)
+	case "PUT":
+		return routes.UpdateCategory(body, user, id)
 	}
 
 	return 400, "Method Invalid"
